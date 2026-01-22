@@ -1,0 +1,26 @@
+<h2>Upload file</h2>
+<input type="file" id="fileInput" />
+<button onclick="upload()">Upload</button>
+ 
+<script>
+async function upload() {
+  const file = document.getElementById("fileInput").files[0];
+ 
+  const res = await fetch(
+    `/api/getUploadSas?filename=${encodeURIComponent(file.name)}`
+  );
+ 
+  const { uploadUrl } = await res.json();
+ 
+  await fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "x-ms-blob-type": "BlockBlob",
+      "Content-Type": file.type
+    },
+    body: file
+  });
+ 
+  alert("Upload successful!");
+}
+</script>
